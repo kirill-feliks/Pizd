@@ -1,8 +1,6 @@
 import OpenAI from 'openai'
 import { ParsedIntent } from '@/types'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-
 interface Context {
   upcomingBookings: Array<{
     id: string
@@ -54,6 +52,7 @@ export async function parseIntent(
 - response_text всегда заполнен, никогда не пустой`
 
   try {
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       max_tokens: 300,

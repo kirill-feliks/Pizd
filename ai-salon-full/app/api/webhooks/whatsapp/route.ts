@@ -8,6 +8,12 @@ import { templates } from '@/lib/whatsapp/templates'
 
 export const dynamic = 'force-dynamic'
 
+type RelationName = { name: string } | { name: string }[] | null
+
+function getRelationName(relation: RelationName) {
+  return Array.isArray(relation) ? relation[0]?.name : relation?.name
+}
+
 // Webhook verification (GET)
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -128,8 +134,8 @@ export async function POST(req: Request) {
   const parsed = await parseIntent(messageText, {
     upcomingBookings: (upcomingBookings ?? []).map(b => ({
       id: b.id,
-      service: (b.services as { name: string }).name,
-      master: (b.masters as { name: string }).name,
+      service: getRelationName(b.services) ?? '',
+      master: getRelationName(b.masters) ?? '',
       starts_at: b.starts_at,
     })),
     availableServices: availableServices?.map(s => s.name) ?? [],
